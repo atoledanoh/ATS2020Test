@@ -1,0 +1,13 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+
+<footer class="page-footer font-small blue darken-3">
+
+    <hr />
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2020 Copyright: GEx Team Beta
+        <!-- <a href="https://mdbootstrap.com/"> MDBootstrap.com</a> -->
+    </div>
+    <!-- Copyright -->
+
+</footer>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>ViewTasksController</servlet-name>
+        <servlet-class>com.nbcc.gex.controllers.ViewTasksController</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ViewEmployeesController</servlet-name>
+        <servlet-class>com.nbcc.gex.controllers.ViewEmployeesController</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ViewTeamsController</servlet-name>
+        <servlet-class>com.nbcc.gex.controllers.ViewTeamsController</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ViewTasksController</servlet-name>
+        <url-pattern>/viewTasksPage</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ViewEmployeesController</servlet-name>
+        <url-pattern>/viewEmployeesPage</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ViewTeamsController</servlet-name>
+        <url-pattern>/viewTeamsPage</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.jsp</location>
+    </error-page>
+    
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+    
+    <error-page>
+        <location>/error.jsp</location>
+    </error-page>
+    
+</web-app>
