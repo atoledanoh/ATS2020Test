@@ -10,17 +10,21 @@
 <%@attribute name="employees" type="com.nbcc.gex.viewmodel.EmployeesViewModel" %>
 
 <h1>Employee List:</h1>
+
+<ul>
+    <% for (String error : employees.getErrors()) {%>
+    <li style="color: #FF0000;"><%= error%></li>
+        <% } %>
+</ul>
+
 <form action="viewEmployeesPage" method="POST">
     <input type="hidden" name="action" value="showDetails" />
-    <table border='0px' width="100%">
+    <table class="table-striped" border='0px' width="100%">
         <% for (Employee employee : employees.getEmployees()) {%>
         <tr>
-            <td><b><%= employee.getFirstName()%>:</b></td>
+            <td><b><%= employee.getLastName() + ", " + employee.getFirstName()%>:</b></td>
             <td><button type="submit" name="employeeID" value="<%= employee.getEmployeeID()%>" >Show Details</button></td>
-        </tr>
-        <tr>
-            <td colspan="2"><%= employee.getSIN()%></td>
-            <td colspan="2"><%= employee.getPayRate()%></td>
+            <td><button type="submit" name="deleteEmployeeID" value="<%= employee.getEmployeeID()%>" >Delete</button></td>
         </tr>
         <% }%>
     </table>

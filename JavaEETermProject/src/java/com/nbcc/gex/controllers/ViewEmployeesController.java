@@ -40,17 +40,17 @@ public class ViewEmployeesController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Get Tasks from database
+        // Get employees from database
         ISQLEmployee employeeRepo = EmployeeFactory.createEmployee();
         EmployeesModel employees = employeeRepo.getEmployees();
-        
+
         // load view Employees model
         EmployeesViewModel viewModel = new EmployeesViewModel();
         loadViewModel(viewModel, employees.getEmployeesList(), UIState.LIST, null, null);
 
         // send ViewEmployeesModel
         EmployeeRequestUtil.setEmployeesModel(request, viewModel);
-        
+
         // forward
         ControllerUtility.forwardToPage(this, request, response, "/ViewEmployees.jsp");
 
@@ -69,48 +69,68 @@ public class ViewEmployeesController extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        
+
         ISQLEmployee employeeRepo = EmployeeFactory.createEmployee();
         EmployeesModel employees = employeeRepo.getEmployees();
         EmployeesViewModel viewModel = new EmployeesViewModel();
 
         if ("showDetails".equals(action)) {
             // get data from sender
-            String employeeID = request.getParameter("employeeID");
+            String showEmployeeID = request.getParameter("employeeID");
+            String deleteEmployeeID = request.getParameter("deleteEmployeeID");
 
-            // load view tasks model
-            loadViewModel(viewModel, employees.getEmployeesList(),
-                    UIState.SHOW_DETAILS, null, employees.getEmployee(Integer.parseInt(employeeID)));
+            if (showEmployeeID != null) {
+                // load view employee model
+                loadViewModel(viewModel, employees.getEmployeesList(),
+                        UIState.SHOW_DETAILS, null, employees.getEmployee(Integer.parseInt(showEmployeeID)));
+
+            } else if (deleteEmployeeID != null) {
+                int employeeID = Integer.parseInt(deleteEmployeeID);
+                String employeeName = employees.getEmployee(employeeID).getLastName() + ", " + employees.getEmployee(employeeID).getFirstName();
+
+                // call storedproc to delete employee
+                int rowsAffected = employeeRepo.deleteEmployee(employeeID);
+
+                if (rowsAffected > 0) {
+                    viewModel.getErrors().add("Deleted employee: " + employeeName);
+                } else {
+                    viewModel.getErrors().add("Unable to delete employee: " + employeeName);
+                }
+
+                // load view employee model
+                employees = employeeRepo.getEmployees();
+                loadViewModel(viewModel, employees.getEmployeesList(),
+                        UIState.LIST, null, null);
+            }
+
             
-
         } else if ("createEmployee".equals(action)) {
             // get data from sender
             EmployeeFormModel employeeForm = EmployeeRequestUtil.extractEmployeeFromRequest(request);
-            
+
             // Get Validated Employee (or empty Employee or new Employee if invalid inputs)
             // Side effect - loads errors arraylist if invalid data
             Employee employeeToCreate = EmployeeValidator.validateEmployee(employeeForm, viewModel.getErrors());
-            
-            if (viewModel.getErrors().isEmpty()){ // validate the employee
+
+            if (viewModel.getErrors().isEmpty()) { // validate the employee
                 // Clear errors
                 viewModel.getErrors().clear();
-                
+
                 // send employee to database
                 employeeRepo.addEmployee(employeeToCreate);
-                
+
                 // load view tasks model
                 employees = employeeRepo.getEmployees();
                 loadViewModel(viewModel, employees.getEmployeesList(), UIState.LIST, null, null);
-                
-                
+
             } else { // not valid
-                
+
                 // load view tasks model
                 loadViewModel(viewModel, employees.getEmployeesList(), UIState.CREATE, null, null);
             }
-            
-        } else if ("loadCreateEmployee".equals(action)){
-            
+
+        } else if ("loadCreateEmployee".equals(action)) {
+
             // load view tasks model
             loadViewModel(viewModel, employees.getEmployeesList(), UIState.CREATE, null, null);
         }
@@ -122,25 +142,24 @@ public class ViewEmployeesController extends HttpServlet {
         ControllerUtility.forwardToPage(this, request, response, "/ViewEmployees.jsp");
 
     }
-    
+
     private void loadViewModel(
             EmployeesViewModel viewModel,
             ArrayList<Employee> employees,
             UIState state,
             ArrayList<String> errors,
-            Employee selectedEmployee)
-    {
+            Employee selectedEmployee) {
         viewModel.setState(state);
         viewModel.setSelectedEmployee(selectedEmployee);
-        
-        if (employees != null){
+
+        if (employees != null) {
             viewModel.setEmployees(employees);
         }
-        
-        if (errors != null){
+
+        if (errors != null) {
             viewModel.setErrors(errors);
         }
-        
+
     }
 
     /**

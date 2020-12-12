@@ -17,7 +17,7 @@
 </ul>
 <form action="viewTasksPage" method="POST">
     <input type="hidden" name="action" value="showDetails" />
-    <table border='0px' width="100%">
+    <table class="table-striped" border='0px' width="100%">
         <% for (Task task : tasks.getTasks()) {%>
         <tr>
             <td><b><%= task.getName()%>:</b></td>

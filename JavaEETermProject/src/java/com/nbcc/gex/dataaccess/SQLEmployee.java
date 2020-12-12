@@ -16,9 +16,9 @@ import java.sql.SQLException;
  *
  * @author AlejandroT
  */
-public class SQLEmployee implements ISQLEmployee{
+public class SQLEmployee implements ISQLEmployee {
 
-    public EmployeesModel getEmployees(){
+    public EmployeesModel getEmployees() {
         EmployeesModel employees = new EmployeesModel();
 
         String sql = "{CALL spEmployee_ListAllEmployees()}";
@@ -45,12 +45,13 @@ public class SQLEmployee implements ISQLEmployee{
                 // load employee into list
                 employees.add(employee);
             }
-        } catch (SQLException sqle) {}
-        
+        } catch (SQLException sqle) {
+        }
+
         return employees;
     }
-    
-    public EmployeesModel getEmployeesOnTeam(int teamID){
+
+    public EmployeesModel getEmployeesOnTeam(int teamID) {
         EmployeesModel employees = new EmployeesModel();
 
         String sql = "{CALL spEmployee_GetEmployeesOnTeam(?)}";
@@ -78,12 +79,13 @@ public class SQLEmployee implements ISQLEmployee{
                 // load employee into list
                 employees.add(employee);
             }
-        } catch (SQLException sqle) {}
-        
+        } catch (SQLException sqle) {
+        }
+
         return employees;
     }
-    
-    public EmployeesModel getUnassignedEmployees(){
+
+    public EmployeesModel getUnassignedEmployees() {
         EmployeesModel employees = new EmployeesModel();
 
         String sql = "{CALL spEmployee_ListUnassignedEmployees()}";
@@ -110,15 +112,16 @@ public class SQLEmployee implements ISQLEmployee{
                 // load employee into list
                 employees.add(employee);
             }
-        } catch (SQLException sqle) {}
-        
+        } catch (SQLException sqle) {
+        }
+
         return employees;
     }
-    
-    public Employee getEmployee(int employeeID){
-        
+
+    public Employee getEmployee(int employeeID) {
+
         Employee employee = new Employee();
-        
+
         String sql = "{CALL spEmployee_GetEmployee(?)}";
 
         try (Connection conn = DataAccess.getConnection();) {
@@ -142,24 +145,44 @@ public class SQLEmployee implements ISQLEmployee{
                 employee.setEmployeeID(id);
 
             }
-        } catch (SQLException sqle) {}
-        
+        } catch (SQLException sqle) {
+        }
+
         return employee;
     }
 
-    public int addEmployee(Employee employee){
+    public int addEmployee(Employee employee) {
         int rowCount = 0;
 
         String sql = "{CALL spEmployee_AddEmployee(?, ?, ?, ?)}";
 
         try (Connection conn = DataAccess.getConnection();) {
-            
+
             CallableStatement statement = conn.prepareCall(sql);
 
             statement.setString(1, employee.getFirstName());
             statement.setString(2, employee.getLastName());
             statement.setInt(3, employee.getSIN());
             statement.setFloat(4, employee.getPayRate());
+
+            rowCount = DataAccess.update(statement);
+
+        } catch (SQLException sqle) {
+        }
+
+        return rowCount;
+    }
+
+    @Override
+    public int deleteEmployee(int employeeID) {
+        int rowCount = 0;
+
+        String sql = "{CALL spTask_DeleteEmployee(?)}";
+
+        try (Connection conn = DataAccess.getConnection();) {
+            CallableStatement statement = conn.prepareCall(sql);
+
+            statement.setInt(1, employeeID);
 
             rowCount = DataAccess.update(statement);
 

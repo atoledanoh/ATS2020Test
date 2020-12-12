@@ -24,4 +24,6 @@ public interface ISQLEmployee {
     public Employee getEmployee(int employeeID);
 
     public int addEmployee(Employee employee);
+    
+    int deleteEmployee(int employeeID);
 }

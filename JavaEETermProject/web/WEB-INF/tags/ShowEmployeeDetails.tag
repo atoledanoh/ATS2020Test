@@ -15,7 +15,7 @@
 %>
 
 <div>
-    <h2><%= employee.getFirstName() %></h2>
+    <h2><%= employee.getLastName() + ", " + employee.getFirstName() %></h2>
     <h3>SIN:</h3>
     <p>
         <%= employee.getSIN()%>

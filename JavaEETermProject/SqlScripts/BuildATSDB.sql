@@ -272,6 +272,20 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE spTask_DeleteEmployee(
+	IN employee INT
+)
+BEGIN
+    delete from Employee 
+	where Employee.EmployeeID = employee
+	AND Employee.EmployeeID not in (
+		select employee from Team
+    );
+END //
+DELIMITER ;
+
+
 -- CALL spTeam_ListAllTeams();
 -- call spEmployee_ListAllEmployees();
 -- call spEmployee_ListUnassignedEmployees();
